@@ -12,7 +12,9 @@ The objective is to understand **how `core` utilities work internally**, handlin
 
 ## 🛠️ Build & Usage
 ```bash
-# clone repo
+# clone repo via ssh (recommended)
+git clone git@github.com:simeulinuxkaliaiwr/mini-coreutils.git
+# clone repo via https
 git clone https://github.com/simeulinuxkaliaiwr/mini-coreutils
 cd mini-coreutils
 
