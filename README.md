@@ -6,7 +6,7 @@ This project aims to replicate essential tools like `ls`, `cat`, `mkdir`, `mktem
 ---
 
 ## 🚀 Goal
-The objective is to understand **how core utilities work internally**, handling files, directories, memory and IO with **raw system calls**
+The objective is to understand **how `core` utilities work internally**, handling files, directories, memory and IO with **raw system calls**
 
 ---
 
