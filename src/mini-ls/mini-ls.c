@@ -80,16 +80,17 @@ void guicat(char *dest, const char *src) {
 }
 
 void show_help() {
-  const char *msg = "Mini-LS feito por mim\n"
-                    "Uso: ls [OPTIONS] [PATH]\n\n"
-                    "Opções:\n"
-                    "  -l, --long        Exibe detalhes completos (mode, uid, "
-                    "gid, size, etc)\n"
-                    "  -a, --all         Mostra arquivos ocultos\n"
-                    "  -r, --recursive   Lista recursivamente\n\n"
-                    "Exemplo:\n"
-                    "  ./a.out -la /etc\n"
-                    "  ./a.out -r ~\n";
+  const char *msg =
+      "Mini-LS made by me\n"
+      "Use: mini-ls [OPTIONS] [PATH]\n\n"
+      "Opções:\n"
+      "  -l, --long        use a long listing format (mode, uid, "
+      "gid, size, etc)\n"
+      "  -a, --all         do not ignore entries starting with .\n"
+      "  -r, --recursive   list subdirectories recursively\n\n"
+      "Example:\n"
+      "  ./a.out -la /etc\n"
+      "  ./a.out -r ~\n";
 
   syscall(SYS_write, STDOUT_FILENO, msg, guilen(msg));
   syscall(SYS_exit, 0);
