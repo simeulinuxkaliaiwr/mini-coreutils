@@ -38,10 +38,20 @@ make clean
 
 ## 🌟 Tools that are currently available
 
-* mini-ls
-* mini-cat
+* mini-ls - List directory contents
+* mini-cat - Concatenate and display files
+* mini-echo - Display a line of text
+* mini-pwd - Print working directory
 
 ---
+
+## 📋 Planned utilities (In order of implementation)
+
+1. mini-mkdir - Make directories
+2. mini-rm - Remove files/directories
+3. mini-cp - Copy files
+4. mini-mv - Move/rename files
+5. mini-mktemp - Create a temporary file or directory
 
 ## 📅 Development Status
 

@@ -20,7 +20,7 @@ BINARIES = $(addprefix $(BIN_DIR)/, $(PROJECTS))
 
 all: $(LIB_FILE) $(BINARIES)
 
-$(LIB_OBJ): $(LIB_SRC)
+$(LIB_OBJ): $(LIB_SRC) $(SRC_DIR)/lib/lib.h
 	@echo "Compiling Library Source: $< to $@"
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -57,4 +57,3 @@ list:
 	@for proj in $(PROJECTS); do echo "  - $$proj"; done
 
 .PHONY: all clean rebuild list
-

@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 void error(const char *msg) {
-  syscall(SYS_write, STDOUT_FILENO, msg, guilen(msg));
+  syscall(SYS_write, STDERR_FILENO, msg, guilen(msg));
 }
 
 void cat(const char *pathname) {
