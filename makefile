@@ -48,7 +48,7 @@ $(foreach proj,$(PROJECTS),$(eval $(call PROJECT_RULES,$(proj))))
 $(PROJECTS): %: $(BIN_DIR)/%
 
 clean:
-	rm -rf $(BIN_DIR) $(OBJ_DIR)
+	rm --recursive --force $(BIN_DIR) $(OBJ_DIR)
 
 rebuild: clean all
 
