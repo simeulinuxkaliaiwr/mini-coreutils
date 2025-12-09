@@ -1,16 +1,9 @@
 #define _GNU_SOURCE
 
+#include "lib.h"
 #include <linux/fcntl.h>
 #include <sys/syscall.h>
 #include <unistd.h>
-
-size_t guilen(const char *str) {
-  size_t counter = 0;
-  while (str[counter] != '\0') {
-    ++counter;
-  }
-  return counter;
-}
 
 void error(const char *msg) {
   syscall(SYS_write, STDOUT_FILENO, msg, guilen(msg));
