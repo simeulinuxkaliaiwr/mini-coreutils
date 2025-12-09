@@ -36,6 +36,13 @@ make clean
 
 ---
 
+## 🌟 Tools that are currently available
+
+* mini-ls
+* mini-cat
+
+---
+
 ## 📅 Development Status
 
 Work in progress — one tool at a time, no rush, maximum learning.
