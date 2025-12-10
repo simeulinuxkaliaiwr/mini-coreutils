@@ -1,7 +1,8 @@
 #define _GNU_SOURCE
 
 #include "lib.h"
-#include <sys/syscall.h>
+#include "sys/guicall.h"
+#include "sys/sysnums.h"
 
 int main(int argc, const char *argv[]) {
   int i;
@@ -13,13 +14,13 @@ int main(int argc, const char *argv[]) {
     i = 1;
   }
   for (; i < argc; ++i) {
-    syscall(SYS_write, STDOUT_FILENO, argv[i], guilen(argv[i]));
+    guicall(SYS_write, STDOUT_FILENO, argv[i], guilen(argv[i]));
     if (i < argc - 1) {
-      syscall(SYS_write, STDOUT_FILENO, " ", 1);
+      guicall(SYS_write, STDOUT_FILENO, " ", 1);
     }
   }
   if (!no_newline) {
-    syscall(SYS_write, STDOUT_FILENO, "\n", 1);
+    guicall(SYS_write, STDOUT_FILENO, "\n", 1);
   }
-  syscall(SYS_exit, 0);
+  guicall(SYS_exit, 0);
 }

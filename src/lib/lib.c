@@ -4,7 +4,7 @@
  *
  * This file contains implementations for string, memory and conversion
  * utilities, designed to operate without the standart C library (libc). It
- * relies on direct system calls (via sys/syscall.h) where necessary (e.g.,
+ * relies on direct system calls where necessary (e.g.,
  * error handling that requires interaction with the kernel/OS state)
  *
  * @author simeulinuxkaliaiwr
@@ -14,12 +14,11 @@
 
 #define _GNU_SOURCE
 
-#include <sys/syscall.h>
 #include <errno.h>
 #include <stddef.h>
-#include <unistd.h>
-#include <asm/unistd.h>
 #include "lib.h"
+#include "sys/guicall.h"
+#include "sys/sysnums.h"
 
 #define LOW_LEVEL_LONG_MAX 9223372036854775807L       // 2^63 - 1
 #define LOW_LEVEL_LONG_MIN (-LOW_LEVEL_LONG_MAX - 1L) // -2^63
@@ -380,12 +379,12 @@ void gui_perror(const char *msg) {
   const char *newline = "\n";
 
   if (msg != NULL && *msg != '\0') {
-    syscall(SYS_write, 2, msg, guilen(msg));
-    syscall(SYS_write, 2, colon_space, 2);
+    guicall(SYS_write, 2, (int64_t)msg, guilen(msg));
+    guicall(SYS_write, 2, (int64_t)colon_space, 2);
   }
 
   // Error string
-  syscall(SYS_write, 2, err_str, guilen(err_str));
+  guicall(SYS_write, 2, (int64_t)err_str, guilen(err_str));
   // Newline
-  syscall(SYS_write, 2, newline, 1);
+  guicall(SYS_write, 2, (int64_t)newline, 1);
 }

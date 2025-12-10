@@ -2,8 +2,8 @@
 
 #include "lib.h"
 #include <linux/limits.h>
-#include <sys/syscall.h>
-#include <unistd.h>
+#include "sys/guicall.h"
+#include "sys/sysnums.h"
 
 static const char *get_env_var(const char *name) {
     extern char **environ;
@@ -58,12 +58,12 @@ int main(int argc, char *argv[]) {
                 "Usage: mini-pwd [-L|-P]\n"
                 "  -L  Use PWD from environment (default)\n"
                 "  -P  Avoid symlinks (physical path)\n";
-            syscall(SYS_write, STDOUT_FILENO, help_msg, guilen(help_msg));
-            syscall(SYS_exit, 0);
+            guicall(SYS_write, STDOUT_FILENO, help_msg, guilen(help_msg));
+            guicall(SYS_exit, 0);
         } else if (arg[0] == '-') {
             const char *err = "mini-pwd: invalid option\n";
-            syscall(SYS_write, STDERR_FILENO, err, guilen(err));
-            syscall(SYS_exit, 1);
+            guicall(SYS_write, STDERR_FILENO, err, guilen(err));
+            guicall(SYS_exit, 1);
         }
     }
     
@@ -73,23 +73,23 @@ int main(int argc, char *argv[]) {
         const char *pwd_value = get_env_var("PWD");
         
         if (pwd_value != NULL && is_absolute_path(pwd_value)) {
-            syscall(SYS_write, STDOUT_FILENO, pwd_value, guilen(pwd_value));
-            syscall(SYS_write, STDOUT_FILENO, "\n", 1);
-            syscall(SYS_exit, 0);
+            guicall(SYS_write, STDOUT_FILENO, pwd_value, guilen(pwd_value));
+            guicall(SYS_write, STDOUT_FILENO, "\n", 1);
+            guicall(SYS_exit, 0);
         }
     }
     
-    long ret = syscall(SYS_getcwd, cwd_buffer, sizeof(cwd_buffer));
+    long ret = guicall(SYS_getcwd, cwd_buffer, sizeof(cwd_buffer));
     
     if (ret < 0) {
         const char *prefix = "mini-pwd: ";
-        syscall(SYS_write, STDERR_FILENO, prefix, guilen(prefix));
+        guicall(SYS_write, STDERR_FILENO, prefix, guilen(prefix));
         gui_perror(NULL);
-        syscall(SYS_exit, 1);
+        guicall(SYS_exit, 1);
     }
     
-    syscall(SYS_write, STDOUT_FILENO, cwd_buffer, guilen(cwd_buffer));
-    syscall(SYS_write, STDOUT_FILENO, "\n", 1);
+    guicall(SYS_write, STDOUT_FILENO, cwd_buffer, guilen(cwd_buffer));
+    guicall(SYS_write, STDOUT_FILENO, "\n", 1);
     
-    syscall(SYS_exit, 0);
+    guicall(SYS_exit, 0);
 }
