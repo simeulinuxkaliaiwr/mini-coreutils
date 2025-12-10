@@ -53,6 +53,8 @@ make clean
 4. mini-mv - Move/rename files
 5. mini-mktemp - Create a temporary file or directory
 
+---
+
 ## 📅 Development Status
 
 Work in progress — one tool at a time, no rush, maximum learning.
