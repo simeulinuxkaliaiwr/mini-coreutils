@@ -11,8 +11,8 @@ LIB_FILE = $(OBJ_DIR)/lib$(LIB_NAME).a
 
 # Lists ALL source files for the library
 LIB_SOURCES = \
-    $(SRC_DIR)/lib/lib.c \
-    $(SRC_DIR)/lib/sys/guicall.c
+    $(SRC_DIR)/lib/lib.c
+    # guicall.c removido - agora é apenas header
 
 # Generates the list of objects from the sources
 LIB_OBJECTS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(LIB_SOURCES))
@@ -47,7 +47,8 @@ $(BIN_DIR)/$(1): $(OBJ_DIR)/$(1).o $(LIB_FILE)
 	@mkdir -p $(BIN_DIR)
 	$$(CC) $$(LDFLAGS) $$< $$(LIB_FILE) -o $$@
 
-$(OBJ_DIR)/$(1).o: $(SRC_DIR)/$(1)/$(1).c $(SRC_DIR)/lib/lib.h $(SRC_DIR)/lib/sys/guicall.h
+# ATUALIZADO: guicall.c removido das dependências
+$(OBJ_DIR)/$(1).o: $(SRC_DIR)/$(1)/$(1).c $(SRC_DIR)/lib/lib.h
 	@echo "Compiling $$< -> $$@"
 	@mkdir -p $(OBJ_DIR)
 	$$(CC) $$(CFLAGS) -c $$< -o $$@

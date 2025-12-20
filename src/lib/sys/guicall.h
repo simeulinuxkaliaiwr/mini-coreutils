@@ -7,48 +7,132 @@
 extern "C" {
 #endif
 
-int64_t _guicall_impl(int64_t num, 
-                      int64_t arg1, int64_t arg2, int64_t arg3,
-                      int64_t arg4, int64_t arg5, int64_t arg6);
+
+#define _guicall0(num) \
+({ \
+    int64_t _ret; \
+    int64_t _num = (int64_t)(num); \
+    __asm__ __volatile__ ( \
+        "syscall" \
+        : "=a" (_ret) \
+        : "a" (_num) \
+        : "rcx", "r11", "memory", "cc" \
+    ); \
+    _ret; \
+})
+
+#define _guicall1(num, a1) \
+({ \
+    int64_t _ret; \
+    int64_t _num = (int64_t)(num); \
+    int64_t _a1 = (int64_t)(a1); \
+    __asm__ __volatile__ ( \
+        "syscall" \
+        : "=a" (_ret) \
+        : "a" (_num), "D" (_a1) \
+        : "rcx", "r11", "memory", "cc" \
+    ); \
+    _ret; \
+})
+
+#define _guicall2(num, a1, a2) \
+({ \
+    int64_t _ret; \
+    int64_t _num = (int64_t)(num); \
+    int64_t _a1 = (int64_t)(a1); \
+    int64_t _a2 = (int64_t)(a2); \
+    __asm__ __volatile__ ( \
+        "syscall" \
+        : "=a" (_ret) \
+        : "a" (_num), "D" (_a1), "S" (_a2) \
+        : "rcx", "r11", "memory", "cc" \
+    ); \
+    _ret; \
+})
+
+#define _guicall3(num, a1, a2, a3) \
+({ \
+    int64_t _ret; \
+    int64_t _num = (int64_t)(num); \
+    int64_t _a1 = (int64_t)(a1); \
+    int64_t _a2 = (int64_t)(a2); \
+    int64_t _a3 = (int64_t)(a3); \
+    __asm__ __volatile__ ( \
+        "syscall" \
+        : "=a" (_ret) \
+        : "a" (_num), "D" (_a1), "S" (_a2), "d" (_a3) \
+        : "rcx", "r11", "memory", "cc" \
+    ); \
+    _ret; \
+})
+
+#define _guicall4(num, a1, a2, a3, a4) \
+({ \
+    int64_t _ret; \
+    int64_t _num = (int64_t)(num); \
+    int64_t _a1 = (int64_t)(a1); \
+    int64_t _a2 = (int64_t)(a2); \
+    int64_t _a3 = (int64_t)(a3); \
+    register int64_t _r10 __asm__("r10") = (int64_t)(a4); \
+    __asm__ __volatile__ ( \
+        "syscall" \
+        : "=a" (_ret) \
+        : "a" (_num), "D" (_a1), "S" (_a2), "d" (_a3), "r" (_r10) \
+        : "rcx", "r11", "memory", "cc" \
+    ); \
+    _ret; \
+})
+
+#define _guicall5(num, a1, a2, a3, a4, a5) \
+({ \
+    int64_t _ret; \
+    int64_t _num = (int64_t)(num); \
+    int64_t _a1 = (int64_t)(a1); \
+    int64_t _a2 = (int64_t)(a2); \
+    int64_t _a3 = (int64_t)(a3); \
+    register int64_t _r10 __asm__("r10") = (int64_t)(a4); \
+    register int64_t _r8  __asm__("r8")  = (int64_t)(a5); \
+    __asm__ __volatile__ ( \
+        "syscall" \
+        : "=a" (_ret) \
+        : "a" (_num), "D" (_a1), "S" (_a2), "d" (_a3), "r" (_r10), "r" (_r8) \
+        : "rcx", "r11", "memory", "cc" \
+    ); \
+    _ret; \
+})
+
+#define _guicall6(num, a1, a2, a3, a4, a5, a6) \
+({ \
+    int64_t _ret; \
+    int64_t _num = (int64_t)(num); \
+    int64_t _a1 = (int64_t)(a1); \
+    int64_t _a2 = (int64_t)(a2); \
+    int64_t _a3 = (int64_t)(a3); \
+    register int64_t _r10 __asm__("r10") = (int64_t)(a4); \
+    register int64_t _r8  __asm__("r8")  = (int64_t)(a5); \
+    register int64_t _r9  __asm__("r9")  = (int64_t)(a6); \
+    __asm__ __volatile__ ( \
+        "syscall" \
+        : "=a" (_ret) \
+        : "a" (_num), "D" (_a1), "S" (_a2), "d" (_a3), "r" (_r10), "r" (_r8), "r" (_r9) \
+        : "rcx", "r11", "memory", "cc" \
+    ); \
+    _ret; \
+})
 
 
-#define _GUICALL_CONCAT(a, b) a ## b
-#define _GUICALL_CONCAT_INNER(a, b) _GUICALL_CONCAT(a, b)
+#define _GUICALL_NARG_(_1,_2,_3,_4,_5,_6,_7,N,...) N
+#define _GUICALL_NARG(...) _GUICALL_NARG_(__VA_ARGS__,6,5,4,3,2,1,0)
 
-#define _GUICALL_NUM_ARGS(...) \
-    _GUICALL_NUM_ARGS_IMPL(0, __VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
-    
-#define _GUICALL_NUM_ARGS_IMPL(_0, _1, _2, _3, _4, _5, _6, _7, N, ...) N
+#define _GUICALL_CONCAT(x,y) x##y
+#define _GUICALL_DISPATCH(n) _GUICALL_CONCAT(_guicall,n)
 
+#define _GUICALL_APPLY(n,...) _GUICALL_DISPATCH(n)(__VA_ARGS__)
 
-#define _GUICALL_DISPATCH_1(name, N, ...) name##0(__VA_ARGS__) // N=1 (guicall0)
-#define _GUICALL_DISPATCH_2(name, N, ...) name##1(__VA_ARGS__) // N=2 (guicall1)
-#define _GUICALL_DISPATCH_3(name, N, ...) name##2(__VA_ARGS__) // N=3 (guicall2)
-#define _GUICALL_DISPATCH_4(name, N, ...) name##3(__VA_ARGS__) // N=4 (guicall3)
-#define _GUICALL_DISPATCH_5(name, N, ...) name##4(__VA_ARGS__) // N=5 (guicall4)
-#define _GUICALL_DISPATCH_6(name, N, ...) name##5(__VA_ARGS__) // N=6 (guicall5)
-#define _GUICALL_DISPATCH_7(name, N, ...) name##6(__VA_ARGS__) // N=7 (guicall6)
-
-#define _GUICALL_OVERLOAD_FINAL(name, N, ...) \
-    _GUICALL_CONCAT_INNER(_GUICALL_DISPATCH_, N)(name, N, __VA_ARGS__)
-
-
-
-#define guicall0(num) _guicall_impl((int64_t)(num), 0, 0, 0, 0, 0, 0)
-#define guicall1(num, a1) _guicall_impl((int64_t)(num), (int64_t)(a1), 0, 0, 0, 0, 0)
-#define guicall2(num, a1, a2) _guicall_impl((int64_t)(num), (int64_t)(a1), (int64_t)(a2), 0, 0, 0, 0)
-#define guicall3(num, a1, a2, a3) _guicall_impl((int64_t)(num), (int64_t)(a1), (int64_t)(a2), (int64_t)(a3), 0, 0, 0)
-#define guicall4(num, a1, a2, a3, a4) _guicall_impl((int64_t)(num), (int64_t)(a1), (int64_t)(a2), (int64_t)(a3), (int64_t)(a4), 0, 0)
-#define guicall5(num, a1, a2, a3, a4, a5) _guicall_impl((int64_t)(num), (int64_t)(a1), (int64_t)(a2), (int64_t)(a3), (int64_t)(a4), (int64_t)(a5), 0)
-#define guicall6(num, a1, a2, a3, a4, a5, a6) _guicall_impl((int64_t)(num), (int64_t)(a1), (int64_t)(a2), (int64_t)(a3), (int64_t)(a4), (int64_t)(a5), (int64_t)(a6))
-
-
-#define guicall(...) \
-    _GUICALL_OVERLOAD_FINAL(guicall, _GUICALL_NUM_ARGS(__VA_ARGS__), __VA_ARGS__)
-
+#define guicall(...) _GUICALL_APPLY(_GUICALL_NARG(__VA_ARGS__), __VA_ARGS__)
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // SYS_GUICALL_H
+#endif /* SYS_GUICALL_H */
