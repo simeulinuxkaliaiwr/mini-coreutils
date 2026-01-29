@@ -1,6 +1,6 @@
 #include "lib.h"
 
-void cat(const char* filename)
+int cat(const char* filename)
 {
 	int fd = guicall(SYS_open, filename, O_RDONLY);
 	if (fd < 0) {
@@ -9,7 +9,7 @@ void cat(const char* filename)
 		write(STDERR_FILENO, prefix, len(prefix));
 		write(STDERR_FILENO, filename, len(filename));
 		write(STDERR_FILENO, sufix, len(sufix));
-		guicall(SYS_exit, 1);
+		return -1;
 	}
 	char buffer[(1024 * 8)];
 	long bytes_read;
@@ -36,11 +36,28 @@ void c_start(long *sp)
 	if (argc == 1) {
 		cat_stdin();
 	} else {
-		for (int i = 1;i < argc;i++) {
-			cat(argv[i]);
+		for (int i = 1; i < argc; i++) {
+		// Se tivermos múltiplos arquivos, imprimimos um separador visual
+			if (argc > 2) {
+				const char* header_color = "\033[1;34m==> "; // Azul Negrito
+				const char* header_end = " <==\033[0m\n";
+                
+				write(STDOUT_FILENO, header_color, len(header_color));
+				write(STDOUT_FILENO, argv[i], len(argv[i]));
+				write(STDOUT_FILENO, header_end, len(header_end));
+			}
+
+			if (cmp(argv[i], "-") == 0) {
+				cat_stdin();
+			} else {
+				cat(argv[i]);
+			}
+
+			if (argc > 2 && i < argc - 1) {
+				write(STDOUT_FILENO, "\n", 1);
+			}
 		}
 	}
-
 	guicall(SYS_exit, 0);
 }
 

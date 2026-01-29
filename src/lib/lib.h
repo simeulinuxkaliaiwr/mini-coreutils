@@ -33,13 +33,9 @@ typedef uint64_t ino64_t;
 #define len(str) \
 ({ \
  	long ret; \
-	if (!str) { \
-		ret = (long)NULL; \
-	} else { \
-		unsigned long c = 0; \
-		while (str[c] != '\0') ++c; \
-		ret = (long)c; \
-	} \
+	unsigned long c = 0; \
+	while (str[c] != '\0') ++c; \
+	ret = (long)c; \
 	ret; \
 })
 
