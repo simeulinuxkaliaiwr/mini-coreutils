@@ -1,7 +1,10 @@
 #ifndef SYS_GUICALL_H
 #define SYS_GUICALL_H
 
-#include <stdint.h>
+#include "sysnums.h"
+
+typedef signed long long int64_t;
+typedef unsigned long long uint64_t;
 
 #ifdef __cplusplus
 extern "C" {

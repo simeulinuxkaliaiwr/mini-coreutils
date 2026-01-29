@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -march=native -Wall -Wextra -std=gnu11
-LDFLAGS =
+CFLAGS = -nostdlib -fno-stack-protector -march=native -O0 -pipe -Wall -Wextra -fno-asynchronous-unwind-tables -s
+LDFLAGS = -nostdlib -static
 
 SRC_DIR = src
 BIN_DIR = bin
@@ -47,7 +47,6 @@ $(BIN_DIR)/$(1): $(OBJ_DIR)/$(1).o $(LIB_FILE)
 	@mkdir -p $(BIN_DIR)
 	$$(CC) $$(LDFLAGS) $$< $$(LIB_FILE) -o $$@
 
-# ATUALIZADO: guicall.c removido das dependências
 $(OBJ_DIR)/$(1).o: $(SRC_DIR)/$(1)/$(1).c $(SRC_DIR)/lib/lib.h
 	@echo "Compiling $$< -> $$@"
 	@mkdir -p $(OBJ_DIR)
