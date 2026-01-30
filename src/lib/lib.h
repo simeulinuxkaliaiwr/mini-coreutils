@@ -22,12 +22,14 @@ extern int errno;
 
 #define ALIGNMENT 16
 #define ALIGN(size) (((size) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1))
+#define MIN_BLOCK_SIZE (ALIGNMENT * 2)
+#define PAGE_SIZE 4096
 
 typedef struct block_header {
 	unsigned long size;
 	int free;
 	struct block_header *next;
-} __attribute__((packed)) block_header_t;
+} block_header_t;
 
 #define HEADER_SIZE sizeof(block_header_t)
 extern block_header_t *free_list;
