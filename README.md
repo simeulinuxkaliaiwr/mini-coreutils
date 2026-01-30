@@ -42,6 +42,7 @@ make clean
 * mini-cat - Concatenate and display files
 * mini-echo - Display a line of text
 * mini-pwd - Print working directory
+* mini-rm - Remove files or directories
 
 ---
 

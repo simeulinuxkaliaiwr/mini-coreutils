@@ -1,3 +1,7 @@
+#if !defined(__x86_64__)
+#error "This project only supports Linux x86_64"
+#endif
+
 #include "lib.h"
 
 int cat(const char* filename)

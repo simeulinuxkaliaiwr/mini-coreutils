@@ -1,6 +1,10 @@
 #ifndef SYS_SYSNUMS_H
 #define SYS_SYSNUMS_H
 
+#if !defined(__x86_64__)
+#error "This project only Supports linux x86_64"
+#endif
+
 #define SYS_read         0
 #define SYS_write        1
 #define SYS_open         2

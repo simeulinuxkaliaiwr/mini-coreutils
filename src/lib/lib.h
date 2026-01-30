@@ -1,16 +1,33 @@
 #ifndef LIB_H
 #define LIB_H
 
+#if !defined(__x86_64__)
+#error "This project only supports Linux x86_64"
+#endif
+
 #include "sys/guicall.h"
 
 /*
- * Note: int64_t and uint64_t
+ * Note: int64_t and uint64_t are defined in sys/guicall.h.
  */
 
 typedef signed int int32_t;
 typedef unsigned int uint32_t;
+
 typedef int64_t off64_t;
 typedef uint64_t ino64_t;
+
+#define ALIGNMENT 16
+#define ALIGN(size) (((size) + (ALIGNMENT + 1)) & ~(ALIGNMENT - 1))
+
+typedef struct block_header {
+	unsigned long size;
+	int free;
+	struct block_header *next;
+} __attribute__((packed)) block_header_t;
+
+#define HEADER_SIZE sizeof(block_header_t)
+extern block_header_t *free_list;
 
 #ifndef NULL
 #define NULL ((void *)0)
@@ -24,11 +41,9 @@ typedef uint64_t ino64_t;
 #define MAP_ANONYMOUS 0x20
 #define MAP_FAILED ((void *) -1)
 
-#if !defined(STDIN_FILENO) && !defined(STDOUT_FILENO) && !defined(STDERR_FILENO)
 #define STDIN_FILENO 0
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
-#endif
 
 #define len(str) \
 ({ \
@@ -39,22 +54,14 @@ typedef uint64_t ino64_t;
 	ret; \
 })
 
-#define nlen(str, maxlen) \
-({ \
- 	long ret; \
-	if (!str) { \
-		ret = (long)NULL; \
-	} else { \
-		unsigned long l = 0; \
-		while (l < maxlen && str[l] != '\0') ++l; \
-		ret = (long)l; \
-	} \
-	ret; \
-})
-
 long write(int fd, const char* msg, unsigned long msg_len);
 char *scpy(char* dest, const char* src);
 char *scat(char* dest, const char* src);
 int cmp(const char* s1, const char* s2);
+
+void *malloc(unsigned long size);
+void free(void *ptr);
+void *calloc(unsigned long nmemb, unsigned long size);
+void *realloc(void *ptr, unsigned long size);
 
 #endif

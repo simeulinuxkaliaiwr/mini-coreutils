@@ -1,6 +1,10 @@
 #ifndef SYS_GUICALL_H
 #define SYS_GUICALL_H
 
+#if !defined(__x86_64__)
+#error "This project only supports Linux x86_64"
+#endif
+
 #include "sysnums.h"
 
 typedef signed long long int64_t;

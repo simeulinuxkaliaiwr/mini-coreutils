@@ -1,6 +1,13 @@
+ARCH_TEST := $(shell echo "int main(){asm(\"syscall\");}" | $(CC) -x c - -o /dev/null 2>/dev/null && echo OK)
+
+ifneq ($(ARCH_TEST),OK)
+    $(error Compiler does not support x86_64 syscall ABI)
+endif
+
+
 CC = gcc
 CFLAGS = -nostdlib -fno-stack-protector -march=native -O0 -pipe -Wall -Wextra -fno-asynchronous-unwind-tables -s
-LDFLAGS = -nostdlib -static
+LDFLAGS = -nostdlib -static -Wl,--build-id=none
 
 SRC_DIR = src
 BIN_DIR = bin
