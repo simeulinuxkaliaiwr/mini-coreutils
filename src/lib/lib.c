@@ -4,6 +4,8 @@
 
 #include "lib.h"
 
+int errno = 0;
+
 long write(int fd, const char* msg, unsigned long msg_len) {
 	long ret;
 	asm volatile ("syscall" : "=a"(ret) : "a"(SYS_write), "D"(fd), "S"(msg), "d"(msg_len) : "rcx", "r11", "memory");
@@ -16,6 +18,19 @@ long write(int fd, const char* msg, unsigned long msg_len) {
 	return ret;
 }
 
+const char* strerror(int errnum)
+{
+	switch(errnum) {
+		case EPERM:  return "Operation not permitted";
+		case ENOENT: return "No such file or directory";
+		case EACCES: return "Permission denied";
+		case ENOMEM: return "Out of memory";
+		case EINVAL: return "Invalid argument";
+		case EEXIST: return "File exists";
+		case EBADF:  return "Bad file descriptor";
+		default:     return "Unknown error";
+	}
+}
 char *scpy(char* dest, const char* src)
 {
 	char* orig_dest = dest;

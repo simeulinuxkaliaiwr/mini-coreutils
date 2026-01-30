@@ -242,8 +242,14 @@ void list(const char* path, ls_options_t *opt)
 {
 	int fd = guicall(SYS_open, path, O_RDONLY | O_DIRECTORY);
 	if (fd < 0) {
-		const char* msg = "Open syscall failed.\n";
+		int err = extract_error(fd);
+		const char* msg = strerror(err);
+		
+		write(STDERR_FILENO, "ls: cannot access '", 19);
+		write(STDERR_FILENO, path, len(path));
+		write(STDERR_FILENO, "': ", 3);
 		write(STDERR_FILENO, msg, len(msg));
+		write(STDERR_FILENO, "\n", 1);
 		guicall(SYS_exit, 1);
 	}
 

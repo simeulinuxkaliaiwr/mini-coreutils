@@ -79,20 +79,20 @@ void remove_recursive(const char *path) {
 }
 
 void process_target(const char *target) {
-    // Tenta apagar como arquivo primeiro
-	if (guicall(SYS_unlink, target) == 0) return;
+	long ret = guicall(SYS_unlink, target);
+	if (ret == 0) return;
 
-    // Se falhou, verificamos se é diretório
-	if (flag_recursive) {
+	int err = extract_error(ret);
+
+	if (flag_recursive && err == EISDIR) { 
 		remove_recursive(target);
-	} else if (flag_dir) {
-		if (guicall(SYS_rmdir, target) < 0 && !flag_force) {
-			const char* msg = "rm: directory not empty or access denied\n";
-			write(STDERR_FILENO, msg, len(msg));
-		}
 	} else if (!flag_force) {
-		const char* msg = "rm: cannot remove directory (use -r)\n";
+		const char* msg = strerror(err);
+		write(STDERR_FILENO, "rm: cannot remove '", 19);
+		write(STDERR_FILENO, target, len(target));
+		write(STDERR_FILENO, "': ", 3);
 		write(STDERR_FILENO, msg, len(msg));
+		write(STDERR_FILENO, "\n", 1);
 	}
 }
 

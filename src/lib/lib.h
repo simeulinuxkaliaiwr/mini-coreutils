@@ -6,6 +6,7 @@
 #endif
 
 #include "sys/guicall.h"
+#include "sys/errno.h"
 
 /*
  * Note: int64_t and uint64_t are defined in sys/guicall.h.
@@ -17,8 +18,10 @@ typedef unsigned int uint32_t;
 typedef int64_t off64_t;
 typedef uint64_t ino64_t;
 
+extern int errno;
+
 #define ALIGNMENT 16
-#define ALIGN(size) (((size) + (ALIGNMENT + 1)) & ~(ALIGNMENT - 1))
+#define ALIGN(size) (((size) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1))
 
 typedef struct block_header {
 	unsigned long size;
@@ -58,6 +61,7 @@ long write(int fd, const char* msg, unsigned long msg_len);
 char *scpy(char* dest, const char* src);
 char *scat(char* dest, const char* src);
 int cmp(const char* s1, const char* s2);
+const char *strerror(int errnum);
 
 void *malloc(unsigned long size);
 void free(void *ptr);

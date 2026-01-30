@@ -8,11 +8,14 @@ int cat(const char* filename)
 {
 	int fd = guicall(SYS_open, filename, O_RDONLY);
 	if (fd < 0) {
-		const char* prefix = "\033[31mmini-cat: ";
-		const char* sufix = ": no such file or directory\033[0m\n";
-		write(STDERR_FILENO, prefix, len(prefix));
+		int err = extract_error(fd); // Converte o retorno negativo do syscall
+		const char* msg_err = strerror(err);
+
+		write(STDERR_FILENO, "cat: ", 5);
 		write(STDERR_FILENO, filename, len(filename));
-		write(STDERR_FILENO, sufix, len(sufix));
+		write(STDERR_FILENO, ": ", 2);
+		write(STDERR_FILENO, msg_err, len(msg_err));
+		write(STDERR_FILENO, "\n", 1);
 		return -1;
 	}
 	char buffer[(1024 * 8)];
