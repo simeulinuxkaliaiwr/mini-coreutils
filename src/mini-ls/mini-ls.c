@@ -40,7 +40,7 @@ void show_help()
 		"Uso: mini-ls [OPTIONS] [PATH]\n\n"
 		"Options:\n"
 		"-l, --long	use a long listing format (mode, uid, gid, size, etc)\n"
-		"-a, --all	do not ignore entries starting with . or ...\n"
+		"-a, --all	do not ignore entries starting with . or ..\n"
 		"-r, --recursive list subdirectories recursively\n\n"
 		"Example:\n"
 		"./mini-ls -la /etc\n"
