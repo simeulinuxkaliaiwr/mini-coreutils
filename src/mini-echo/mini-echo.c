@@ -28,7 +28,7 @@ void c_start(long *sp)
 	if (!no_newline) {
 		write(STDOUT_FILENO, "\n", 1);
 	}
-	guicall(SYS_exit, 0);
+	exit_asm(0);
 }
 
 void __attribute__((naked)) _start()

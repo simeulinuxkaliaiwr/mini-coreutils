@@ -38,7 +38,29 @@ extern block_header_t *free_list;
 #define NULL ((void *)0)
 #endif
 
+#define S_IFMT   0170000
+#define S_IFDIR  0040000
+#define S_IFREG  0100000
+#define S_IFLNK  0120000
+
+#define F_OK 0
+#define W_OK 2
+
+#define AT_FDCWD -100
+
+struct timespec {
+    long tv_sec;
+    long tv_nsec;
+};
+
 #define O_RDONLY 0000000
+#define O_WRONLY 01
+#ifndef O_CREAT
+#define O_CREAT 0100
+#endif
+#ifndef O_TRUNC
+#define O_TRUNC 01000
+#endif
 #define O_DIRECTORY 0200000
 #define PROT_READ 0x1
 #define PROT_WRITE 0x2
@@ -59,6 +81,7 @@ extern block_header_t *free_list;
 	ret; \
 })
 
+void __attribute__((noreturn)) exit_asm(int code);
 long write(int fd, const char* msg, unsigned long msg_len);
 char *scpy(char* dest, const char* src);
 char *scat(char* dest, const char* src);

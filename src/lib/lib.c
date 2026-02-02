@@ -6,6 +6,17 @@
 
 int errno = 0;
 
+void __attribute__((noreturn)) exit_asm(int code)
+{
+	asm volatile (
+		"syscall"
+		:
+		: "a" (SYS_exit), "d" (code)
+		: "rcx", "r11", "memory"
+	);
+	__builtin_unreachable();
+}
+
 long write(int fd, const char* msg, unsigned long msg_len) {
 	long ret;
 	asm volatile ("syscall" : "=a"(ret) : "a"(SYS_write), "D"(fd), "S"(msg), "d"(msg_len) : "rcx", "r11", "memory");

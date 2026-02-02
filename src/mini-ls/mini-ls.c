@@ -46,7 +46,7 @@ void show_help()
 		"./mini-ls -la /etc\n"
 		"./mini-ls -r /home/user\n";
 	write(STDOUT_FILENO, msg, len(msg));
-	guicall(SYS_exit, 0);
+	exit_asm(0)
 }
 
 typedef struct {
@@ -250,7 +250,7 @@ void list(const char* path, ls_options_t *opt)
 		write(STDERR_FILENO, "': ", 3);
 		write(STDERR_FILENO, msg, len(msg));
 		write(STDERR_FILENO, "\n", 1);
-		guicall(SYS_exit, 1);
+		exit_asm(1);
 	}
 
 	unsigned long buf_size = (1024 * 32);
@@ -260,7 +260,7 @@ void list(const char* path, ls_options_t *opt)
 		const char* msg = "mmap syscall failed.\n";
 		write(STDERR_FILENO, msg, len(msg));
 		guicall(SYS_close, fd);
-		guicall(SYS_exit, 1);
+		exit_asm(1);
 	}
 
 	long nread;
@@ -309,7 +309,7 @@ void c_start(long *sp)
 
 	list(opts.path, &opts);
 
-	guicall(SYS_exit, 0);
+	exit_asm(0);
 }
 
 void __attribute__((naked)) _start()

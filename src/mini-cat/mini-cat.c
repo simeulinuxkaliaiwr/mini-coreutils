@@ -65,7 +65,7 @@ void c_start(long *sp)
 			}
 		}
 	}
-	guicall(SYS_exit, 0);
+	exit_asm(0)
 }
 
 void __attribute__((naked)) _start()

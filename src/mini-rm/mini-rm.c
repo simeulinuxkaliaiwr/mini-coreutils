@@ -103,7 +103,7 @@ void c_start(long *sp) {
 	if (argc < 2) {
 		const char *usage = "usage: rm [-rfd] targets...\n";
 		write(STDERR_FILENO, usage, len(usage));
-		guicall(SYS_exit, 1);
+		exit_asm(1);
 	}
 
 	int i = 1;
@@ -123,7 +123,7 @@ void c_start(long *sp) {
 		process_target(argv[i]);
 	}
 
-	guicall(SYS_exit, 0);
+	exit_asm(0);
 }
 
 void __attribute__((naked)) _start() {

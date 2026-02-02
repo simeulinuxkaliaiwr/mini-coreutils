@@ -65,11 +65,11 @@ void c_start(long *sp)
 				"  -L	Use PWD from environment (default)\n"
 				"  -P	Avoid syslinks (physical path)\n";
 			write(STDOUT_FILENO, help_msg, len(help_msg));
-			guicall(SYS_exit, 0);
+			exit_asm(0);
 		} else if (arg[0] == '-') {
 			const char* err = "mini-pwd: invalid option\n";
 			write(STDERR_FILENO, err, len(err));
-			guicall(SYS_exit, 1);
+			exit_asm(1);
 		}
 	}
 
@@ -81,7 +81,7 @@ void c_start(long *sp)
 		if (pwd_value != NULL && is_absolute_path(pwd_value)) {
 			write(STDOUT_FILENO, pwd_value, len(pwd_value));
 			write(STDOUT_FILENO, "\n", 1);
-			guicall(SYS_exit, 0);
+			exit_asm(0);
 		}
 	}
 
@@ -90,13 +90,13 @@ void c_start(long *sp)
 	if (ret < 0) {
 		const char* msg = "mini-pwd: getcwd syscall failed.\n";
 		write(STDERR_FILENO, msg, len(msg));
-		guicall(SYS_exit, 0);
+		exit_asm(0);
 	}
 
 	write(STDOUT_FILENO, cwd_buffer, len(cwd_buffer));
 	write(STDOUT_FILENO, "\n", 1);
 
-	guicall(SYS_exit, 0);
+	exit_asm(0);
 }
 
 void __attribute__((naked)) _start()
