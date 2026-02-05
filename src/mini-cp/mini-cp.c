@@ -7,26 +7,6 @@
 #define BUFFER_SIZE (64 * 1024)
 #define PATH_MAX 4096
 
-struct stat64 {
-	unsigned long   st_dev;
-	unsigned long   st_ino;
-	unsigned long   st_nlink;
-	unsigned int    st_mode;
-	unsigned int    st_uid;
-	unsigned int    st_gid;
-	unsigned int    __pad0;
-	unsigned long   st_rdev;
-	long            st_size;
-	long            st_blksize;
-	long            st_blocks;
-
-	struct timespec st_atime;
-	struct timespec st_mtime;
-	struct timespec st_ctime;
-
-	long __unused[3];
-};
-
 struct linux_dirent64 {
 	ino64_t d_ino;
 	off64_t d_off;

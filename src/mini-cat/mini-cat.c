@@ -18,11 +18,22 @@ int cat(const char* filename)
 		write(STDERR_FILENO, "\n", 1);
 		return -1;
 	}
-	char buffer[(1024 * 8)];
-	long bytes_read;
-	while ((bytes_read = guicall(SYS_read, fd, buffer, sizeof(buffer))) > 0) {
-		write(STDOUT_FILENO, buffer, bytes_read);
+	
+	struct stat64 st;
+	if (guicall(SYS_fstat, fd, &st) < 0) {
+		guicall(SYS_close, fd);
+		return -1;
 	}
+
+	off64_t offset = 0;
+	long total_sent = 0;
+
+	while (total_sent < st.st_size) {
+		long ret = guicall(SYS_sendfile, STDIN_FILENO, fd, &offset, st.st_size - total_sent);
+		if (ret <= 0) break;
+		total_sent += ret;
+	}
+
 	guicall(SYS_close, fd);
 }
 
@@ -65,7 +76,7 @@ void c_start(long *sp)
 			}
 		}
 	}
-	exit_asm(0)
+	exit_asm(0);
 }
 
 void __attribute__((naked)) _start()
