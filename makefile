@@ -1,4 +1,4 @@
-# Test for x86_64
+# x86_64 verification
 
 ARCH_TEST := $(shell echo "int main(){asm(\"syscall\");}" | $(CC) -x c - -o /dev/null 2>/dev/null && echo OK)
 
